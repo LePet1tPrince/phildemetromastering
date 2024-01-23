@@ -13,6 +13,24 @@
 
 const ProjectsCards = [
     {
+        "ID": -1,
+        "Label": "Theo Vandenhoff – In The Throes Of Love",
+        "Production": "Not On Label (Theo Vandenhoff Self-Released)",
+        "Year": 2024,  // Replace with actual year information
+        "Artist": "Theo Vandenhoff",  // Replace with actual artist information
+        "Album": "In The Throes Of Love",  // Replace with actual album information
+        "Image": "https://i.discogs.com/LGlmmf-ozU3SyMHdmzHx0GBS7QAlk9RhjTxnTKVHfjM/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI4ODk0/MDg3LTE2OTk4MTE0/NTItNjc3Ny5qcGVn.jpeg"
+      },
+    {
+        "ID": 0,
+        "Label": "Cayley Thomas – How Else Can I Tell You?",
+        "Production": "Not On Label (Cayley Thomas Self-released)",
+        "Year": 2023,
+        "Artist": "Cayley Thomas",
+        "Album": "How Else Can I Tell You",
+        "Image": "https://i.discogs.com/MO-exuiZ3youmkyMpxaM-6uL-5cPicba8Gnxvskaxpg/rs:fit/g:sm/q:90/h:533/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE1MzA1/Njg0LTE1ODk0Nzg2/MDItNDQwMy5qcGVn.jpeg"
+      },
+    {
      "ID": 1,
      "Label": "Big Sugar - Heated ‎(2xLP, Album, Dlx, RE, Ora)",
      "Production": "Universal Music Canada",
