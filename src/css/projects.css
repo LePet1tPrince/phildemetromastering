@@ -1,65 +1,345 @@
 @import './scss/custom.css';
 
+/* Project Card Styling */
 .project-card-image {
-  min-width:150px;
-  min-height:150px;
-  max-width: 150px;
-  max-height: 150px;
-
-  /* width: auto; */
-  /* height: auto; */
+  min-width: 180px;
+  min-height: 180px;
+  max-width: 180px;
+  max-height: 180px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.4s ease, filter 0.4s ease;
 }
-
-@media (min-width: 1000px) {
-  .project-card-image {
-    min-width:150px;
-  min-height:150px;
-    max-width: 150px;
-    max-height: 150px;
-    object-fit: cover;
-
-  }
-
-}
-
 
 .project-card {
-    /* background-color: #e5d9b6 ; */
-    /* border-width: 10px; */
-    /* border-color: #be9e44; */
-    background-color: #e5d9b6;
-    /* border-radius: 15px; */
-    border: none;
-    min-height: 180px;
-    min-width: 180px;
-    max-height: 180px;
-    max-width: 180px;
-    /* align-items: center; */
-    /* margin: 15px 15px 15px 15px; */
-    
-
+  background-color: #e5d9b6;
+  border: none;
+  border-radius: 10px;
+  min-height: 180px;
+  min-width: 180px;
+  max-height: 180px;
+  max-width: 180px;
+  margin: 0.5rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+  position: relative;
+  padding: 0;
+  transform-origin: center;
 }
 
+.project-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.project-card:hover .project-card-image {
+  filter: brightness(0.75);
+  transform: scale(1.05);
+}
 
 .album-icon {
   filter: invert(75%) sepia(71%) saturate(267%) hue-rotate(2deg) brightness(86%) contrast(84%);
-
 }
 
 .card-img-overlay {
-  max-width: 150px;
-  max-height: 150px;
-  min-width: 150px;
-  min-height: 150px;
-  
+  max-width: 180px;
+  max-height: 180px;
+  min-width: 180px;
+  min-height: 180px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  border-radius: 10px;
 }
 
+.project-card:hover .card-img-overlay,
+.card-img-overlay.opacity-100 {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-img-overlay:not(.opacity-100):not(:hover) {
+  transform: translateY(10px);
+}
 
 .card-img-overlay-about {
-  line-height: 10px!important;
-  
+  line-height: 10px !important;
 }
+
+/* Typography for cards */
+.card-title {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.2;
+  transition: transform 0.3s ease;
+}
+
+.card-text {
+  margin-bottom: 0.25rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .card-title,
+.project-card:hover .card-text {
+  transform: translateY(-2px);
+}
+
+.year-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(203, 178, 106, 0.8);
+  color: #1a1a1a;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover .year-badge {
+  opacity: 1;
+}
+
+/* Pagination styling */
+.pagination {
+  margin: 2rem 0;
+  justify-content: center;
+}
+
+.pagination .page-item .page-link {
+  color: #1a1a1a;
+  background-color: #e5d9b6;
+  border-color: #cbb26A;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #cbb26A;
+  border-color: #be9e44;
+  color: #1a1a1a;
+  font-weight: bold;
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: #d8c690;
+  border-color: #be9e44;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination .page-item.disabled .page-link {
+  opacity: 0.6;
+}
+
+/* Filter and Sort Controls */
+.discography-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #cbb26A;
+  background-color: #e5d9b6;
+  color: #1a1a1a;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(203, 178, 106, 0.5);
+  border-color: #be9e44;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #1a1a1a;
+  opacity: 0.7;
+}
+
+.clear-search {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #1a1a1a;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.clear-search:hover {
+  opacity: 1;
+}
+
+/* React Bootstrap Dropdown styling */
+.filter-dropdown .dropdown-toggle,
+.sort-dropdown .dropdown-toggle,
+.filter-dropdown .btn.dropdown-toggle,
+.sort-dropdown .btn.dropdown-toggle {
+  background-color: #cbb26A !important;
+  border-color: #be9e44 !important;
+  color: #1a1a1a !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-align: left;
+  position: relative;
+  cursor: pointer;
+}
+
+.filter-dropdown .dropdown-toggle:hover,
+.sort-dropdown .dropdown-toggle:hover,
+.filter-dropdown .dropdown-toggle:focus,
+.sort-dropdown .dropdown-toggle:focus,
+.filter-dropdown .btn.dropdown-toggle:hover,
+.sort-dropdown .btn.dropdown-toggle:hover,
+.filter-dropdown .btn.dropdown-toggle:focus,
+.sort-dropdown .btn.dropdown-toggle:focus {
+  background-color: #d8c690 !important;
+  border-color: #cbb26A !important;
+}
+
+/* Add dropdown arrow */
+.filter-dropdown .btn.dropdown-toggle::after,
+.sort-dropdown .btn.dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.filter-dropdown .dropdown-menu,
+.sort-dropdown .dropdown-menu {
+  background-color: #e5d9b6;
+  border-color: #be9e44;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+}
+
+.filter-dropdown .dropdown-item,
+.sort-dropdown .dropdown-item {
+  color: #1a1a1a;
+  transition: background-color 0.2s ease;
+  padding: 0.5rem 1rem;
+}
+
+.filter-dropdown .dropdown-item:hover,
+.sort-dropdown .dropdown-item:hover,
+.filter-dropdown .dropdown-item:focus,
+.sort-dropdown .dropdown-item:focus {
+  background-color: #d8c690;
+  color: #1a1a1a;
+}
+
+.filter-dropdown .dropdown-item.active,
+.sort-dropdown .dropdown-item.active {
+  background-color: #cbb26A;
+  color: #1a1a1a;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-img-overlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+    transform: translateY(0);
+  }
+
+  .discography-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .filter-dropdown,
+  .sort-dropdown,
+  .search-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .filter-dropdown .btn,
+  .sort-dropdown .btn {
+    width: 100%;
+    text-align: left;
+  }
+
+  .year-badge {
+    opacity: 1;
+  }
+
+  .project-card {
+    margin: 0.25rem;
+  }
+}
+
+/* Animation for new cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-card {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
 p {
   line-height: 1;
 }

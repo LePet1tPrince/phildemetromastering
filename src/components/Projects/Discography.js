@@ -1,138 +1,305 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
+import Dropdown from 'react-bootstrap/Dropdown';
 import Fade from 'react-reveal/Fade';
-import Slide from 'react-reveal/Slide';
+import Paginate from './Paginate';
 import ProjectCard from './DiscographyCard';
 import ProjectsCards from '../data/ProjectsCards';
-import Paginate from './Paginate';
-import Pagination from 'react-bootstrap/Pagination';
 import YearDropdown from './YearDropdown';
-import ProjectsCardsNew from '../data/ProjectsCardsNew';
 
-
-
-
+// Custom toggle component for dropdowns
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <button
+        className="btn dropdown-toggle"
+        ref={ref}
+        onClick={(e) => {
+            e.preventDefault();
+            onClick(e);
+        }}
+        aria-haspopup="true"
+        aria-expanded="false"
+    >
+        {children}
+    </button>
+));
 
 const Discography = () => {
-    const [cards, setCards] = useState(ProjectsCards)
+    // State management
+    const [allCards] = useState(ProjectsCards);
+    const [filteredCards, setFilteredCards] = useState(() => {
+        // Sort by year descending initially
+        return [...ProjectsCards].sort((a, b) => {
+            // Ensure both years are treated as numbers for comparison
+            const yearA = typeof a.Year === 'number' ? a.Year : parseInt(a.Year, 10) || 0;
+            const yearB = typeof b.Year === 'number' ? b.Year : parseInt(b.Year, 10) || 0;
+
+            // First sort by year (descending)
+            if (yearA !== yearB) {
+                return yearB - yearA; // Sort in descending order (newest first)
+            }
+
+            // If years are the same, sort by ID as a fallback
+            return a.ID - b.ID;
+        });
+    });
     const [currentPage, setCurrentPage] = useState(1);
     const [cardsPerPage, setCardsPerPage] = useState(18);
-    const [show, setShow] = useState(true)
-    // const [selectedYear, setSelectedYear] = useState()
-    const [ sortBy, setSortBy ] = useState("Year")
-    // const [yearFilteredCards, setYearFilteredCards] = useState()
-    
+    const [show, setShow] = useState(true);
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [sortBy, setSortBy] = useState("Year");
+    const [isLoading, setIsLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+
+    // Extract unique years for the dropdown
+    const years = useMemo(() => {
+        // Convert years to numbers before sorting to ensure consistent sorting
+        const numericYears = allCards.map(card =>
+            typeof card.Year === 'number' ? card.Year : parseInt(card.Year, 10) || 0
+        );
+        return [...new Set(numericYears)].sort((a, b) => b - a);
+    }, [allCards]);
+
+    // Search function
+    const handleSearch = useCallback((term) => {
+        setSearchTerm(term);
+
+        if (term.trim() === "") {
+            setIsSearching(false);
+            return;
+        }
+
+        setIsSearching(true);
+        setIsLoading(true);
+
+        // Perform search after a short delay to avoid excessive filtering
+        const searchTimeout = setTimeout(() => {
+            const lowercaseTerm = term.toLowerCase();
+            const results = allCards.filter(card =>
+                card.Artist.toLowerCase().includes(lowercaseTerm) ||
+                card.Album.toLowerCase().includes(lowercaseTerm) ||
+                (card.Production && card.Production.toLowerCase().includes(lowercaseTerm)) ||
+                (card.Label && card.Label.toLowerCase().includes(lowercaseTerm)) ||
+                String(card.Year).includes(lowercaseTerm)
+            );
+
+            setSearchResults(results);
+            setCurrentPage(1);
+            setIsLoading(false);
+        }, 300);
+
+        return () => clearTimeout(searchTimeout);
+    }, [allCards]);
+
+    // Clear search
+    const clearSearch = () => {
+        setSearchTerm("");
+        setIsSearching(false);
+    };
+
+    // Handle sorting and filtering
     useEffect(() => {
-        console.log(sortBy)
-        setCards(cards.sort((a,b) => {
+        setIsLoading(true);
+
+        // Determine which dataset to use based on search state
+        let dataToProcess = isSearching ? searchResults : allCards;
+
+        // First filter by year if selected
+        let result = [...dataToProcess];
+        if (selectedYear) {
+            // Convert both to numbers for comparison to ensure consistent type handling
+            result = result.filter(card => {
+                const cardYear = typeof card.Year === 'number' ? card.Year : parseInt(card.Year, 10) || 0;
+                const filterYear = typeof selectedYear === 'number' ? selectedYear : parseInt(selectedYear, 10) || 0;
+                return cardYear === filterYear;
+            });
+        }
+
+        // Then sort the filtered results
+        result.sort((a, b) => {
             if (sortBy === "Year") {
-                return b.Year - a.Year;
-            } else if (sortBy ==="Artist") {
-                console.log('Artist sort')
-                return a.Artist - b.Artist;
+                // Ensure both years are treated as numbers for comparison
+                const yearA = typeof a.Year === 'number' ? a.Year : parseInt(a.Year, 10) || 0;
+                const yearB = typeof b.Year === 'number' ? b.Year : parseInt(b.Year, 10) || 0;
+
+                // First sort by year (descending)
+                if (yearA !== yearB) {
+                    return yearB - yearA; // Sort in descending order (newest first)
+                }
+
+                // If years are the same, sort by ID as a fallback
+                return a.ID - b.ID;
+            } else if (sortBy === "Artist") {
+                return a.Artist.localeCompare(b.Artist);
             } else if (sortBy === "Album") {
-                return a.Album - b.Album
+                return a.Album.localeCompare(b.Album);
             }
-        }))
+            return 0;
+        });
 
-    },[sortBy])
- 
-   const indexOfLastCard = currentPage * cardsPerPage;
-   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-   const currentCards = cards.slice(indexOfFirstCard, indexOfLastCard);
-//    const years = [...new Set(cards.map((card) => card.Year))];
+        setFilteredCards(result);
+        setCurrentPage(1); // Reset to first page when filter/sort changes
 
+        // Short delay to allow for animation
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 300);
+    }, [sortBy, selectedYear, allCards, isSearching, searchResults]);
 
-   function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
-  }
+    // Pagination logic
+    const indexOfLastCard = currentPage * cardsPerPage;
+    const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+    const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard);
 
-   async function handlePageChange(newPage) {
-    handleShow()
-    setCurrentPage(newPage)
-    await delay(1000);
-    setShow(true)
-    // console.log(newPage)
-   }
-
-   function handleShow() {
-    //    console.log(!show);
-    setShow(!show);
-   }
-
-   function findFilenameByIndex(arr, targetIndex) {
-    for (let i = 0; i < arr.length; i++) {
-        console.log(arr[i].ind);
-      if (arr[i].ind == targetIndex) {
-        // console.log(arr[i].filename)
-        return arr[i].filename;
-      }
+    // Animation delay helper
+    function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
     }
-    return null; // Return null if no matching index is found
-  }
+
+    // Page change handler with animation
+    async function handlePageChange(newPage) {
+        setShow(false);
+        setCurrentPage(newPage);
+        await delay(300);
+        setShow(true);
+    }
+
+    // Year filter handler
+    function handleYearSelect(year) {
+        setSelectedYear(year);
+    }
+
+    // Sort handler
+    function handleSortChange(sortType) {
+        setSortBy(sortType);
+    }
 
     return (
         <div className="fullscreen bg-light">
-            <div className="text-center font-72 bold pb-5 bg-secondary">Discography</div>
-                    <div className="d-flex align-items-center justify-content-center flex-wrap pt-5">
-                        <div className="container mx-auto mt-4">
-                        {/* <YearDropdown years={years}/> */}
-                    <Paginate
-                        cardsPerPage={cardsPerPage} 
-                        totalCards={cards.length} 
-                        currentPage={currentPage}
-                        handlePageChange={handlePageChange} 
-                        className="border border-dark border-2"/>
-
-
-                        {/* Sort By Section */}
-                        {/* <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Sort By
+            <div className="text-center display-4 fw-bold py-4 bg-secondary">Discography</div>
+            <div className="container py-5">
+                {/* Filter and Sort Controls */}
+                <div className="discography-controls mb-4">
+                    {/* Search Input */}
+                    <div className="search-container">
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Search by artist, album, label..."
+                            value={searchTerm}
+                            onChange={(e) => handleSearch(e.target.value)}
+                            aria-label="Search discography"
+                        />
+                        {searchTerm && (
+                            <button
+                                className="clear-search"
+                                onClick={clearSearch}
+                                aria-label="Clear search"
+                            >
+                                ×
                             </button>
-                            <ul class="dropdown-menu">
-                                <li><button class="dropdown-item"
-                                 onClick={() => setSortBy("Year")}
-                                 >Year</button></li>
-                                <li><button class="dropdown-item"
-                                 onClick={() => setSortBy("Artist")}
-                                >Artist</button></li>
-                                <li><a class="dropdown-item"
-                                onClick={() => setSortBy("Album")}
-                                 >Album</a></li>
-                            </ul>
-                            </div> */}
-
-                            <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-6">
-                 <Fade left big opposite when={show} duration={1000}>
-                    {currentCards.map(card => {
-                        const filename = findFilenameByIndex(ProjectsCardsNew, card.ID);
-                        console.log("test filename", filename);
-                        
-                        return <ProjectCard key={card.ID} {...card} />
-                        
-                    })}
-                    </Fade>
-                   
+                        )}
                     </div>
-                    <Paginate
-                        cardsPerPage={cardsPerPage} 
-                        totalCards={cards.length} 
-                        currentPage={currentPage}
-                        handlePageChange={handlePageChange} 
-                        className="border border-dark border-2"/>
-              
+
+                    <YearDropdown
+                        years={years}
+                        selectedYear={selectedYear}
+                        onYearSelect={handleYearSelect}
+                    />
+
+                    <div className="sort-dropdown">
+                        <Dropdown>
+                            <Dropdown.Toggle
+                                as={CustomToggle}
+                                id="dropdown-sort"
+                            >
+                                Sort By: {sortBy}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    onClick={() => handleSortChange("Year")}
+                                    active={sortBy === "Year"}
+                                >
+                                    Year
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    onClick={() => handleSortChange("Artist")}
+                                    active={sortBy === "Artist"}
+                                >
+                                    Artist
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    onClick={() => handleSortChange("Album")}
+                                    active={sortBy === "Album"}
+                                >
+                                    Album
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
                 </div>
+
+                {/* Search status */}
+                {isSearching && (
+                    <div className="alert alert-light text-center mb-4">
+                        {searchResults.length > 0
+                            ? `Found ${searchResults.length} results for "${searchTerm}"`
+                            : `No results found for "${searchTerm}"`
+                        }
                     </div>
+                )}
 
+                {/* Pagination */}
+                {filteredCards.length > cardsPerPage && (
+                    <Paginate
+                        cardsPerPage={cardsPerPage}
+                        totalCards={filteredCards.length}
+                        currentPage={currentPage}
+                        handlePageChange={handlePageChange}
+                    />
+                )}
 
-               
+                {/* Loading indicator */}
+                {isLoading ? (
+                    <div className="text-center my-5">
+                        <div className="spinner-border text-primary" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {/* Cards Grid */}
+                        <Fade when={show} duration={500}>
+                            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-3">
+                                {currentCards.map(card => (
+                                    <ProjectCard key={card.ID} {...card} />
+                                ))}
+                            </div>
+                        </Fade>
+
+                        {/* No results message */}
+                        {currentCards.length === 0 && !isLoading && (
+                            <div className="alert alert-info text-center my-5">
+                                No albums found matching your criteria.
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {/* Bottom Pagination */}
+                {filteredCards.length > cardsPerPage && (
+                    <Paginate
+                        cardsPerPage={cardsPerPage}
+                        totalCards={filteredCards.length}
+                        currentPage={currentPage}
+                        handlePageChange={handlePageChange}
+                    />
+                )}
             </div>
-
-    )
+        </div>
+    );
 };
-
-
-
-  
 
 export default Discography;

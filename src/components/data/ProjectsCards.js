@@ -1,15 +1,15 @@
 // import * as imageSrc from '../../images/discography-images/';
 // let imageUrl = [];
 //     imageSrc.map(
-//     imageUrl.push(img) 
+//     imageUrl.push(img)
 //     ));
 
 
-    function importAll(r) {
-        return r.keys().map(r);
-      }
-      
-      const images = importAll(require.context('../../images/discography-images/', false, /\.(png|jpe?g|svg)$/));
+    // function importAll(r) {
+    //     return r.keys().map(r);
+    //   }
+
+    //   const images = importAll(require.context('../../images/discography-images/', false, /\.(png|jpe?g|svg)$/));
 
 const ProjectsCards = [
     {
@@ -37,7 +37,7 @@ const ProjectsCards = [
      "Year": 2022,
      "Artist": "Big Sugar",
      "Album": "Heated",
-     "Image": images[1]
+     "Image": "https://i.discogs.com/sD4_nhOXmzoJbaNuVGnlR2m6QSeASom2hz599_h214A/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MzI4/MTctMTMyMjc3ODc4/MC5qcGVn.jpeg"
     },
     {
      "ID": 2,
@@ -2477,7 +2477,97 @@ const ProjectsCards = [
      "Artist": "Harm",
      "Album": "The Nine",
      "Image": "https://i.discogs.com/IuRbrDVs7skJVs1R-b7a79dWo1yKiFB2vxevPl4AqIs/rs:fit/g:sm/q:90/h:587/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg5MzQ4/MDMtMTQ3MTc4ODcz/OS03OTI1LmpwZWc.jpeg"
-    }
+    },
+    {
+      "ID": 273,
+      "Label": "Six Shooter Records",
+      "Production": "",
+      "Year": 2025,
+      "Artist": "Peter Dreams and MoonRiivr",
+      "Album": "Peter Dreams and Moonriivr",
+      "Image": "https://i.discogs.com/15lRtzsk7kP8YWDLeieM4f4ODlJK0rDjduNCBZwgVwo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMzMjU5/NjIzLTE3NDA2MzA5/MTgtMTQ3NS5qcGVn.jpeg"
+     },
+     {
+      "ID": 274,
+      "Label": "Radio Ghost Music",
+      "Production": "",
+      "Year": 2024,
+      "Artist": "Sumo Cyco",
+      "Album": "Lost in Cyco City",
+      "Image": "https://i.discogs.com/mxwFuZJKjuhtOq3gJPLRv_SUzjwzrfvUP5d49Uax8RQ/rs:fit/g:sm/q:90/h:519/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTY3NzY0/OTQtMTQ2MjQwMTM0/My05Nzg4LmpwZWc.jpeg"
+     },
+     {
+      "ID": 275,
+      "Label": "Machine Music United",
+      "Production": "",
+      "Year": 2024,
+      "Artist": "Kiss is Kill",
+      "Album": "Anatomy Of Fear",
+      "Image": "https://i.discogs.com/46SQ5a1a1C0EHtOCQ0oue87rh1jWrIN2BL6GHXmmgJE/rs:fit/g:sm/q:90/h:535/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwNDY3/MTkyLTE3MTM3MzAw/MjctMzMxMS5qcGVn.jpeg"
+     },
+     {
+      "ID": 276,
+      "Label": "Crucial Taunt",
+      "Production": "",
+      "Year": 2024,
+      "Artist": "David Barrett Trio",
+      "Album": "Broadbaster",
+      "Image": ""
+     },
+     {
+      "ID": 277,
+      "Label": "Rubber Factory Records",
+      "Production": "",
+      "Year": 2024,
+      "Artist": "Het Up!",
+      "Album": "Hey Up!",
+      "Image": "https://i.discogs.com/rMy4U8OZb2PrLqaxT7Dm8va2G5hyvRATCvQWBjeahsI/rs:fit/g:sm/q:90/h:599/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMyNTE1/ODkwLTE3MzM3MTYw/NzQtODM2Ni5wbmc.jpeg"
+    },
+    {
+      "ID": 278,
+      "Label": "Gypsy Soul Records",
+      "Production": "",
+      "Year": 2023,
+      "Artist": "Bianca James",
+      "Album": "Bianca James",
+      "Image": "https://i.discogs.com/4Sj9m3ACBFijDdRJJR_lgOpfJMAu7MXX_KXW_QnTuM8/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI5OTU3/MjMzLTE3MDkyMDUy/MzYtMzQ3Mi5qcGVn.jpeg"
+     },
+     {
+      "ID": 279,
+      "Label": "Victory Pool",
+      "Production": "",
+      "Year": 2023,
+      "Artist": "Moonriivr",
+      "Album": "Vol. 1",
+      "Image": "https://i.discogs.com/R3iNqS0JxQ2gpg-raoedpV8FiwqKwikUPv-16WTNWHI/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMwMzk5/Nzg1LTE3MTMxMjc3/OTUtMTc2Ni5qcGVn.jpeg"
+     },
+     {
+      "ID": 280,
+      "Label": "Self-Released",
+      "Production": "",
+      "Year": 2023,
+      "Artist": "Monstrosa",
+      "Album": "Youth",
+      "Image": "https://i.discogs.com/kasCUFImFJooZJLcYKD45ccYRWNSjpwQiLFB-NllaNI/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxMzIw/NTE2LTE3MjE5Nzc2/NjktMjY4OC5qcGVn.jpeg"
+     },
+     {
+      "ID": 281,
+      "Label": "Self-Released",
+      "Production": "",
+      "Year": 2023,
+      "Artist": "Monstrosa",
+      "Album": "Platonic",
+      "Image": "https://i.discogs.com/HmWUWfRvf0j5BA2iKF5CsjDFxb3miDR-Wmk--2JXliw/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxMzIw/NDIzLTE3MjE5Nzcy/MjctMTc4OS5qcGVn.jpeg"
+     },
+     {
+      "ID": 282,
+      "Label": "Self-Released",
+      "Production": "",
+      "Year": 2023,
+      "Artist": "Monstrosa",
+      "Album": "I Like Girls Like You Do",
+      "Image": "https://i.discogs.com/9x4w88Ub3C0p3oNhuLPI37ZMLvMW7ZyeKrz30GXLM38/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTMxMzIw/NTQ2LTE3MjE5Nzc4/ODItNTI4Ni5qcGVn.jpeg"
+     }
    ]
 
 export default ProjectsCards

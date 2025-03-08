@@ -1,21 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react';
 
-export default function YearDropdown({props}) {
-    const { years } = props;
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+
+export default function YearDropdown({ years, selectedYear, onYearSelect }) {
+  // Create a custom toggle component to handle the dropdown state
+  const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <button
+      className="btn dropdown-toggle"
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {children}
+    </button>
+  ));
+
+  // Sort years in descending order, ensuring they are treated as numbers
+  const sortedYears = [...years].map(year =>
+    typeof year === 'number' ? year : parseInt(year, 10) || 0
+  ).sort((a, b) => b - a);
 
   return (
-    <div><div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      
-    </button>
-    <ul className="dropdown-menu">
-        {years.map((year) => {
-            return <li><a className="dropdown-item" href="#">{year}</a></li>
-        })}
-      <li><a className="dropdown-item" href="#">Action</a></li>
-      <li><a className="dropdown-item" href="#">Another action</a></li>
-      <li><a className="dropdown-item" href="#">Something else here</a></li>
-    </ul>
-  </div></div>
-  )
+    <div className="filter-dropdown">
+      <Dropdown>
+        <Dropdown.Toggle
+          as={CustomToggle}
+          id="dropdown-year"
+        >
+          {selectedYear ? `Year: ${selectedYear}` : 'Filter by Year'}
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item
+            onClick={() => onYearSelect(null)}
+            active={selectedYear === null}
+          >
+            All Years
+          </Dropdown.Item>
+
+          {sortedYears.map((year) => (
+            <Dropdown.Item
+              key={year}
+              onClick={() => onYearSelect(typeof year === 'number' ? year : parseInt(year, 10) || 0)}
+              active={selectedYear === year}
+            >
+              {year}
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
+  );
 }

@@ -1,71 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import loading from '../../images/icons/Spinner-1s-200px.svg';
-import album from '../../images/icons/album.png';
-// import testimage from filename;
+import React, { useEffect, useState } from 'react';
 
+import album from '../../images/icons/album.png';
+import loading from '../../images/icons/Spinner-1s-200px.svg';
 
 function DiscographyCard(props) {
-    const {
-    ID,
-    Artist,
-    Album,
-    Image,
-    Year
-   } = props;
+  const { ID, Artist, Album, Image, Year, Label, Production } = props;
+  const [isHovered, setIsHovered] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [imageUrl, setImageUrl] = useState(Image);
-
-  useEffect(() => {
-    // console.log(`${imageUrl}?timestamp=${new Date().getTime()}`)
-    setImageUrl(Image)
-  },[Image])
-
-  const handleImageError = () => {
-    setImageUrl(loading)
-    console.log('error')
-    setTimeout(() => {
-      setImageUrl(Image);
-      // console.log(`${imageUrl}?timestamp=${new Date().getTime()}`);
-    }, 5000)
-  };
-
+  // Import all images from the discography-images directory
   function importAll(r) {
     return r.keys().map(r);
   }
-  
+
   const images = importAll(require.context('../../images/discography-images/', false, /\.(png|jpe?g|svg)$/));
 
+  // Use a fallback image if the album image can't be loaded
+  const handleImageError = (e) => {
+    e.target.onerror = null; // Prevent infinite loop
+    e.target.src = album;
+  };
+
+  // Handle image load
+  const handleImageLoad = () => {
+    setIsLoaded(true);
+  };
+
+  // Add animation class after component mounts
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-       <div className="col rounded-5">
-         <div className="card project-card">
-         <img 
-                src={images[ID-1]}
-                className="card-img project-card-image" 
-                alt={`Album Artwork ${Album} - ${Artist}`} 
-                // onLoad={()=> setIsImageLoaded(true)}
-                // onError={handleImageError}
-                // style={{ display: isImageLoaded ? 'block' : 'none'}}
-                // loading="lazy"
-                /> 
-         
-         {/* {!Image && <img
-         className="album-icon"
-         src={album}/>} */}
-              
-              <div className="card-img-overlay hover-appear text-white">
-                  <p className="card-title font-18 bold">{Artist.length > 20? Artist.slice(0,20) + "..." : Artist}</p>
-                  <p className="card-text font-12">{Album.length > 40 ? Album.slice(0,40) + "..." : Album}</p>
-                  <p className="card-text font-14">{Year}</p>
-              </div>
-          </div>
+    <div className="col">
+      <div
+        className={`card project-card ${isLoaded ? 'fade-in-card' : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <img
+          src={Image || (ID > 0 && ID <= images.length ? images[ID-1] : album)}
+          className="card-img project-card-image"
+          alt={`${Artist} - ${Album}`}
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+          loading="lazy"
+        />
 
+        <div className="year-badge">{Year}</div>
 
+        <div className={`card-img-overlay text-white ${isHovered ? 'opacity-100' : ''}`}>
+          <p className="card-title">{Artist.length > 20 ? Artist.slice(0, 20) + "..." : Artist}</p>
+          <p className="card-text">{Album.length > 40 ? Album.slice(0, 40) + "..." : Album}</p>
+          {Production && <p className="card-text small-text">{Production.length > 25 ? Production.slice(0, 25) + "..." : Production}</p>}
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-
-export default DiscographyCard
+export default DiscographyCard;

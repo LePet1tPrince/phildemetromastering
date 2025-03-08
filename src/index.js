@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
-
-
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,4 +13,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
